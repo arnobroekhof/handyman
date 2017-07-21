@@ -1,0 +1,8 @@
+host: 127.0.0.1:8081
+commands:
+  - name: echo
+    command: echo
+    arg: true
+  - name: script1
+    command: /tmp/test1
+    arg: false
