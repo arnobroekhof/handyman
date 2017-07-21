@@ -1,9 +1,13 @@
 host: 127.0.0.1:8081
 context: /
+use_tokens: true
 commands:
   - name: echo
-    command: echo
+    command: /bin/echo
     arg: true
   - name: script1
     command: /tmp/test1
     arg: false
+tokens:
+  - name: arno
+    token: 123456789
