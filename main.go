@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/arnobroekhof/handyman"
+  "github.com/arnobroekhof/handyman/http_server"
 )
 
 func main() {
-	handyman.Main()
+	http_server.Main()
 }

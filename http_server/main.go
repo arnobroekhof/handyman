@@ -1,4 +1,4 @@
-package handyman
+package http_server
 
 import (
 	"log"
