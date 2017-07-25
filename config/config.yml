@@ -5,9 +5,9 @@ commands:
   - name: echo
     command: /bin/echo
     arg: true
-  - name: script1
-    command: /tmp/test1
+  - name: whoami
+    command: /usr/bin/whoami
     arg: false
 tokens:
-  - name: arno
+  - name: testuser
     token: 123456789

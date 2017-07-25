@@ -93,7 +93,15 @@ func tokenMiddleware(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "forbidden", "reason": "X-Auth-Token not provided or empty"})
 		c.Abort()
 	} else {
-		c.Next()
+		for _, t := range Config.TOKENS {
+			if token == t.Token {
+				fmt.Printf("%s authorized\n", t.Name)
+				c.Next()
+				return
+			}
+		}
+		c.JSON(403, gin.H{"error": "unauthorized"})
+		c.Abort()
 	}
 }
 
