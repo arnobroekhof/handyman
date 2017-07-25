@@ -1,12 +1,10 @@
-package httpserver
+package main
 
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/configor"
 )
 
 // Config struct
@@ -75,19 +73,4 @@ func tokenMiddleware(c *gin.Context) {
 		c.JSON(403, gin.H{"error": "unauthorized"})
 		c.Abort()
 	}
-}
-
-// Main function
-func Main() {
-	// load config file based on the environment variable CONFIG_FILE
-	configFile := os.Getenv("CONFIG_FILE")
-	if configFile == "" {
-		log.Fatal("Environment variable CONFIG_FILE not set")
-	}
-
-	// load config file
-	configor.Load(&Config, configFile)
-	// create the commands
-	initHTTPServer()
-
 }

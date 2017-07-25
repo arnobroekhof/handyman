@@ -1,9 +1,21 @@
 package main
 
 import (
-	"github.com/arnobroekhof/handyman/httpserver"
+	"log"
+	"os"
+
+	"github.com/jinzhu/configor"
 )
 
 func main() {
-	httpserver.Main()
+	configFile := os.Getenv("CONFIG_FILE")
+	if configFile == "" {
+		log.Fatal("Environment variable CONFIG_FILE not set")
+	}
+
+	// load config file
+	configor.Load(&Config, configFile)
+	// create the commands
+	initHTTPServer()
+
 }
