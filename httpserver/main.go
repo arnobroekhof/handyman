@@ -1,7 +1,6 @@
-package http_server
+package httpserver
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -34,7 +33,7 @@ func healthGet(c *gin.Context) {
 }
 
 func addRouteWithArg(name string, cmd string, router *gin.RouterGroup) {
-	fmt.Printf("Configuring route %v with command %s and argument\n", name, cmd)
+	log.Printf("Configuring route %v with command %s and argument\n", name, cmd)
 	path := name + "/:arg"
 	router.GET(path, func(c *gin.Context) {
 		arg := c.Params.ByName("arg")
@@ -45,7 +44,7 @@ func addRouteWithArg(name string, cmd string, router *gin.RouterGroup) {
 }
 
 func addRouteWithoutArg(name string, cmd string, router *gin.RouterGroup) {
-	fmt.Printf("Configuring route %s with command: %s\n", name, cmd)
+	log.Printf("Configuring route %s with command: %s\n", name, cmd)
 	router.GET(name, func(c *gin.Context) {
 		if cmdOut, err := exec.Command(cmd).Output(); err == nil {
 			c.JSON(http.StatusOK, gin.H{"status": "ok", "cmd": string(cmd), "stdout": string(cmdOut)})
@@ -65,15 +64,13 @@ func createCommands() {
 		router.Use(tokenMiddleware)
 	}
 
-	//TODO: Create func for checking if the api key is set
-	//and if set: check the headers and the key
-
 	// health test
 	router.GET("/ping", healthGet)
 
 	// group commands in the same context
 	commands := router.Group(Config.CONTEXT)
 
+	// loop through the commands and configure the routes
 	for _, command := range Config.COMMANDS {
 		if command.Arg == true {
 			addRouteWithArg(command.Name, command.Command, commands)
@@ -95,7 +92,7 @@ func tokenMiddleware(c *gin.Context) {
 	} else {
 		for _, t := range Config.TOKENS {
 			if token == t.Token {
-				fmt.Printf("%s authorized\n", t.Name)
+				log.Printf("%s authorized\n", t.Name)
 				c.Next()
 				return
 			}
@@ -107,7 +104,7 @@ func tokenMiddleware(c *gin.Context) {
 
 // Main function
 func Main() {
-	// load config file
+	// load config file based on the environment variable CONFIG_FILE
 	configFile := os.Getenv("CONFIG_FILE")
 	if configFile == "" {
 		log.Fatal("Environment variable CONFIG_FILE not set")
