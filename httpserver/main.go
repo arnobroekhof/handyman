@@ -28,6 +28,7 @@ var Config = struct {
 	}
 }{}
 
+// check if the service is alive specific check
 func healthGet(c *gin.Context) {
 	c.String(200, "pong")
 }
@@ -59,16 +60,16 @@ func createCommands() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	if Config.USE_TOKENS {
-		log.Println("Using tokens")
-		router.Use(tokenMiddleware)
-	}
-
-	// health test
+	// default unauthenticated ping check
 	router.GET("/ping", healthGet)
 
 	// group commands in the same context
 	commands := router.Group(Config.CONTEXT)
+
+	if Config.USE_TOKENS {
+		log.Println("Using tokens")
+		commands.Use(tokenMiddleware)
+	}
 
 	// loop through the commands and configure the routes
 	for _, command := range Config.COMMANDS {
